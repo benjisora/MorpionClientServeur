@@ -2,16 +2,15 @@
 1446667744 source:c:\users\mobi\desktop\morpionclientserveur\serveur\main.cpp
 	<iostream>
 
-1458051716 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\main.cpp
+1458056484 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\main.cpp
 	<iostream>
 	<SFML/Network.hpp>
 	<SFML/Graphics.hpp>
 	<cstdlib>
 	<windows.h>
 	<vector>
+	"make_unique.h"
 	<string>
-	<map>
-	"Player.h"
 
 1458040101 c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\make_unique.h
 	<memory>

@@ -1,5 +1,6 @@
 # depslib dependency file v1.0
-<<<<<<< HEAD
+7995392 <<<<<< HEAD
+
 1458046164 source:c:\users\mobi\desktop\morpionclientserveur\client\main.cpp
 	<SFML/Graphics.hpp>
 	<SFML/Network.hpp>
@@ -7,8 +8,16 @@
 	<random>
 	<thread>
 	<sstream>
-=======
-1458036408 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\client\main.cpp
+
+1458046164 
+
+1458055040 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\client\main.cpp
 	<SFML/Graphics.hpp>
->>>>>>> d482bd995f3a209b101d306d97607e457c23c058
+	<SFML/Network.hpp>
+	<iostream>
+	<random>
+	<thread>
+	<sstream>
+
+1458036408 2bd995f3a209b101d306d97607e457c23c058
 
