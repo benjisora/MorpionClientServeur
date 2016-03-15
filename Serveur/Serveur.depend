@@ -2,3 +2,32 @@
 1446667744 source:c:\users\mobi\desktop\morpionclientserveur\serveur\main.cpp
 	<iostream>
 
+1458051716 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\main.cpp
+	<iostream>
+	<SFML/Network.hpp>
+	<SFML/Graphics.hpp>
+	<cstdlib>
+	<windows.h>
+	<vector>
+	<string>
+	<map>
+	"Player.h"
+
+1458040101 c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\make_unique.h
+	<memory>
+	<type_traits>
+	<utility>
+
+1458052054 c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\player.h
+	<iostream>
+	<SFML/Network.hpp>
+	<SFML/Graphics.hpp>
+	<cstdlib>
+	<windows.h>
+	<vector>
+	<string>
+	"make_unique.h"
+
+1458051181 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\player.cpp
+	"Player.h"
+
