@@ -23,6 +23,9 @@ int main()
 
     std::vector<std::unique_ptr<sf::TcpSocket>> clients;
 
+    std::vector<string> pseudos;
+
+
     sf::SocketSelector selector;
     selector.add(listener); //création
 
@@ -45,6 +48,18 @@ int main()
 
                     data << 101 + idClient;
                     cout << 101 + idClient << endl;
+
+                    sf::Packet packet;
+                    if (clients[i]->receive(packet) != sf::Socket::Done)
+                        cout <<"on a un truc!!!!"<<endl;
+                    string pseudo;
+                    packet >> pseudo;
+                    packet.clear();
+                    pseudos.push_back(pseudo);
+
+                    cout << pseudos[0]<<endl;
+
+
                     if(clients[idClient]->send(data) != sf::Socket::Done)
                         cout<< "pas envoyé ): " << endl;
                     data.clear();
@@ -72,12 +87,6 @@ int main()
                     }
                 }
             }
-
-
-
-
-
-
         }
     }
 
