@@ -12,6 +12,7 @@ int main()
     sf::TcpSocket socket;
     string ip = "172.31.247.41";
     string portString = "";
+    string pseudo ="";
     int port = 80;
     int code=-1;;
     int idCLient=-1;
@@ -41,18 +42,26 @@ int main()
     stringstream buffer(portString);
     buffer >> port;
     */
+    cout << "Entrez Pseudo : ";
+    getline(cin, pseudo);
 
     sf::Socket::Status status = socket.connect(ip, port);
     if (status != sf::Socket::Done)
         cout << "Impossible de se connecter" << endl;
     else
-        cout << "connexion etablie avec le serveur distant" << endl << endl;
-
-
+        cout << "connexion etablie avec le serveur distant" << endl;
+    //Envoie du pseudo
+    data << 0 << pseudo;
+    if (socket.send(data) != sf::Socket::Done)
+        std::cout << "Impossible d'envoyer les donnees au serveur" << std::endl;
+    data.clear();
     if (socket.receive(data) != sf::Socket::Done)
         cout << "Erreur receive" << endl;
     data >> code;
     data.clear();
+
+    cout << code << endl;
+
 
     if(code==101)
     {
@@ -68,7 +77,7 @@ int main()
         stringstream buffer2(nbPionString);
         buffer2 >> nbPion;
 
-        data << sizeGrid << ipPlayerString << nbPion;
+        data << 0 << sizeGrid << ipPlayerString << nbPion;
         if (socket.send(data) != sf::Socket::Done)
             std::cout << "Impossible d'envoyer les donnees au serveur" << std::endl;
         data.clear();
@@ -91,14 +100,20 @@ int main()
     //if(code == )
     sf::RenderWindow window(sf::VideoMode(640, 480), "SFML works!");
 
-
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
+                data << 11;
+                if (socket.send(data) != sf::Socket::Done)
+                    std::cout << "Impossible d'envoyer les donnees au serveur" << std::endl;
+                data.clear();
                 window.close();
+            }
+
         }
         /****************************
         STEP
