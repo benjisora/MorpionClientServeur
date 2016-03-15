@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1458046164 source:c:\users\mobi\desktop\morpionclientserveur\client\main.cpp
+	<SFML/Graphics.hpp>
+	<SFML/Network.hpp>
+	<iostream>
+	<random>
+	<thread>
+	<sstream>
+
