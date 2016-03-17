@@ -1,6 +1,13 @@
 # depslib dependency file v1.0
-1446667744 source:c:\users\mobi\desktop\morpionclientserveur\serveur\main.cpp
+1458201932 source:c:\users\mobi\desktop\morpionclientserveur\serveur\main.cpp
 	<iostream>
+	<SFML/Network.hpp>
+	<SFML/Graphics.hpp>
+	<cstdlib>
+	<windows.h>
+	<vector>
+	"make_unique.h"
+	<string>
 
 1458059315 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\main.cpp
 	<iostream>
@@ -29,4 +36,22 @@
 
 1458051181 source:c:\users\benjisora\desktop\clientserveur\morpionclientserveur\serveur\player.cpp
 	"Player.h"
+
+1458057372 source:c:\users\mobi\desktop\morpionclientserveur\serveur\player.cpp
+	"Player.h"
+
+1458057372 c:\users\mobi\desktop\morpionclientserveur\serveur\player.h
+	<iostream>
+	<SFML/Network.hpp>
+	<SFML/Graphics.hpp>
+	<cstdlib>
+	<windows.h>
+	<vector>
+	<string>
+	"make_unique.h"
+
+1458057372 c:\users\mobi\desktop\morpionclientserveur\serveur\make_unique.h
+	<memory>
+	<type_traits>
+	<utility>
 
