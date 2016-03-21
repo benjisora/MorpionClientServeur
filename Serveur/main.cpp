@@ -99,25 +99,19 @@ int main()
         if (selector.wait())
         {
             // Test du listener
-             cout << "wait ?" << endl;
             if (selector.isReady(listener))  // Il y a une connexion en attente
             {
-<<<<<<< HEAD
-                 cout << "is ready ?" << endl;
-=======
->>>>>>> origin/master
                 unique_ptr<sf::TcpSocket> client = make_unique<sf::TcpSocket>();
 
                 if (listener.accept(*client.get()) == sf::Socket::Done)
                 {
-                    //client->setBlocking(false);
                     clients.push_back(std::move(client));
 
                     selector.add(*clients[clients.size()-1]); // Ajout du client au selecteur de telle sorte a ce qu'on puisse l'écouter
 
                     cout << "NOUVEAU CLIENT !! Nombre de clients: " << clients.size() <<endl;
 
-                    std::thread pseudoCheck (pseudocheck, clients, client, pseudos, idClient); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                    std::thread pseudoverify (pseudocheck, clients, client, pseudos, idClient); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                     idClient++;
 
                 }
