@@ -6,6 +6,7 @@
 #include <vector>
 #include "make_unique.h"
 #include <string>
+#include <thread>
 
 
 using namespace std;
@@ -39,7 +40,7 @@ int main()
 
                 if (listener.accept(*client.get()) == sf::Socket::Done)
                 {
-                    client->setBlocking(false);
+                    //client->setBlocking(false);
                     clients.push_back(std::move(client));
 
                     selector.add(*clients[clients.size()-1]); // Ajout du client au selecteur de telle sorte a ce qu'on puisse l'écouter
@@ -47,20 +48,28 @@ int main()
                     cout << "NOUVEAU CLIENT !! Nombre de clients: " << clients.size() <<endl;
 
                     sf::Packet packet;
+                    string pseudo = "";
                     if (clients[idClient]->receive(packet) != sf::Socket::Done)
                     {
                         cout << "echec de reception du pseudo" <<endl;
                     }
-                    string pseudo;
                     packet >> code >> pseudo;
-
+                    packet.clear();
                     if(code == 0)
                     {
-                        packet.clear();
+                        std::thread pseudoCheck(pseudocheck, pseudos, idClient); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                        /*
                         pseudos.push_back(pseudo);
-                        cout << pseudos[idClient]<<endl;
+                        cout << "le pseudo du client " << idClient << " est " << pseudos[idClient]<<endl;
+                        if(idClient==0){
+                            code = 101;
+                        }
+                        */
                     }
-                    code = 0;
+                    else
+                    {
+                        cout << "code error reception pseudo"<<endl;
+                    }
                     data << code;
                     if(clients[idClient]->send(data) != sf::Socket::Done)
                     {
@@ -77,43 +86,33 @@ int main()
             }
             else  // La socket du listener n'est pas prete, on teste tous les autres sockets (clients)
             {
-
-                for (int i=0; i < clients.size(); i++)
+                int limit = clients.size();
+                for (int i=0; i < limit; i++)
                 {
-                    //cout << "boucle for"<<endl;
                     if (selector.isReady(*clients[i].get()))
                     {
                         // Le client a fait quelque chose dans la socket
-                        //cout << "selectoready"<<endl;
 
-                        sf::Packet packet;
-                        if (clients[i]->receive(packet))
+                        sf::Packet data2;
+
+                        if (clients[i]->receive(data2) != sf::Socket::Disconnected)
                         {
-                            cout << "receive" << endl;
-                            packet >> code >> tailleGrille >> client2IP >> nbAlign;
-                            packet.clear();
 
-                            if(code == 11)
-                            {
-                                //delete clients[i].get();
-
-                                clients.erase(clients.begin()+i);
-                                pseudos.erase(pseudos.begin()+i);
-                                cout << "Client " << i << " est parti..." <<endl;
-                                tailleGrille = 0;
-                                client2IP = "";
-                                nbAlign = 0;
-                                //system("pause");
-                            }
+                        }
+                        else
+                        {
+                            cout << pseudos[i] << " est parti" << endl;
+                            selector.remove(*clients[i].get());
+                            clients.erase(clients.begin()+i);
+                            pseudos.erase(pseudos.begin()+i);
+                            i--;
+                            limit--;
+                            idClient--;
                         }
                     }
                 }
             }
         }
     }
-
-
-
-
     return 0;
 }
