@@ -10,7 +10,7 @@ using namespace std;
 int main()
 {
     sf::TcpSocket socket;
-    string ip = "127.0.0.1";
+    string ip = "172.31.247.41";
     string portString = "";
     string pseudo ="";
     int port = 80;
