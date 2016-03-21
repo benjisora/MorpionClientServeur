@@ -11,6 +11,72 @@
 
 using namespace std;
 
+void pseudocheck(std::vector<std::unique_ptr<sf::TcpSocket>> clients, unique_ptr<sf::TcpSocket> client, std::vector<string> pseudos, int idClient)
+{
+
+    boolean pseudoAdded = false;
+
+
+    int code;
+    string pseudo = "";
+    sf::Packet packet;
+    sf::Packet data;
+
+    client->setBlocking(true);
+
+    while(!pseudoAdded)
+    {
+
+        if (clients[idClient]->receive(packet) != sf::Socket::Done)
+        {
+            cout << "echec de reception du pseudo" <<endl;
+        }
+        packet >> code >> pseudo;
+        packet.clear();
+
+        if(idClient==0 && code == 0) //si il y a aucun pseudo
+        {
+            pseudoAdded = true;
+            code = 101;
+        }
+        else if(idClient != 0 && code == 0) //si il y a déjà des pseudos
+        {
+            boolean pseudoGood = true;
+            for (unsigned int i=0; i<pseudos.size(); i++)
+            {
+                if(pseudos[i]==pseudo)
+                {
+                    pseudoGood = false;
+                    code = 1;
+                    data << code;
+                    if(clients[idClient]->send(data) != sf::Socket::Done)
+                    {
+                        cout << "echec d'envoi du code" <<endl;
+                    }
+                    data.clear();
+                    break;
+                }
+            }
+            if(pseudoGood)
+            {
+                pseudoAdded = true;
+                code = 0;
+            }
+        }
+    }
+
+    pseudos.push_back(pseudo);
+    data << code;
+    if(clients[idClient]->send(data) != sf::Socket::Done)
+    {
+        cout << "echec d'envoi du code" <<endl;
+    }
+    data.clear();
+}
+
+
+
+
 int main()
 {
     sf::Packet data;
@@ -19,8 +85,8 @@ int main()
     std::vector<string> pseudos;
 
     int idClient = 0;
-    int tailleGrille = 0, nbAlign = 0;
-    string client2IP = "";
+    //int tailleGrille = 0, nbAlign = 0;
+    //string client2IP = "";
 
     sf::TcpListener listener;
     listener.listen(80); //création du listener et écoute du port
@@ -35,7 +101,6 @@ int main()
             // Test du listener
             if (selector.isReady(listener))  // Il y a une connexion en attente
             {
-
                 unique_ptr<sf::TcpSocket> client = make_unique<sf::TcpSocket>();
 
                 if (listener.accept(*client.get()) == sf::Socket::Done)
@@ -47,37 +112,9 @@ int main()
 
                     cout << "NOUVEAU CLIENT !! Nombre de clients: " << clients.size() <<endl;
 
-                    sf::Packet packet;
-                    string pseudo = "";
-                    if (clients[idClient]->receive(packet) != sf::Socket::Done)
-                    {
-                        cout << "echec de reception du pseudo" <<endl;
-                    }
-                    packet >> code >> pseudo;
-                    packet.clear();
-                    if(code == 0)
-                    {
-                        std::thread pseudoCheck(pseudocheck, pseudos, idClient); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-                        /*
-                        pseudos.push_back(pseudo);
-                        cout << "le pseudo du client " << idClient << " est " << pseudos[idClient]<<endl;
-                        if(idClient==0){
-                            code = 101;
-                        }
-                        */
-                    }
-                    else
-                    {
-                        cout << "code error reception pseudo"<<endl;
-                    }
-                    data << code;
-                    if(clients[idClient]->send(data) != sf::Socket::Done)
-                    {
-                        cout << "echec d'envoi du code" <<endl;
-                    }
-                    data.clear();
-
+                    std::thread pseudoCheck (pseudocheck, clients, client, pseudos, idClient); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                     idClient++;
+
                 }
                 else
                 {
