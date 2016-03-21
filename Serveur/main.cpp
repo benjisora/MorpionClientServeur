@@ -6,9 +6,76 @@
 #include <vector>
 #include "make_unique.h"
 #include <string>
+#include <thread>
 
 
 using namespace std;
+
+void pseudocheck(std::vector<std::unique_ptr<sf::TcpSocket>> clients, unique_ptr<sf::TcpSocket> client, std::vector<string> pseudos, int idClient)
+{
+
+    boolean pseudoAdded = false;
+
+
+    int code;
+    string pseudo = "";
+    sf::Packet packet;
+    sf::Packet data;
+
+    client->setBlocking(true);
+
+    while(!pseudoAdded)
+    {
+
+        if (clients[idClient]->receive(packet) != sf::Socket::Done)
+        {
+            cout << "echec de reception du pseudo" <<endl;
+        }
+        packet >> code >> pseudo;
+        packet.clear();
+
+        if(idClient==0 && code == 0) //si il y a aucun pseudo
+        {
+            pseudoAdded = true;
+            code = 101;
+        }
+        else if(idClient != 0 && code == 0) //si il y a déjà des pseudos
+        {
+            boolean pseudoGood = true;
+            for (unsigned int i=0; i<pseudos.size(); i++)
+            {
+                if(pseudos[i]==pseudo)
+                {
+                    pseudoGood = false;
+                    code = 1;
+                    data << code;
+                    if(clients[idClient]->send(data) != sf::Socket::Done)
+                    {
+                        cout << "echec d'envoi du code" <<endl;
+                    }
+                    data.clear();
+                    break;
+                }
+            }
+            if(pseudoGood)
+            {
+                pseudoAdded = true;
+                code = 0;
+            }
+        }
+    }
+
+    pseudos.push_back(pseudo);
+    data << code;
+    if(clients[idClient]->send(data) != sf::Socket::Done)
+    {
+        cout << "echec d'envoi du code" <<endl;
+    }
+    data.clear();
+}
+
+
+
 
 int main()
 {
@@ -18,8 +85,8 @@ int main()
     std::vector<string> pseudos;
 
     int idClient = 0;
-    int tailleGrille = 0, nbAlign = 0;
-    string client2IP = "";
+    //int tailleGrille = 0, nbAlign = 0;
+    //string client2IP = "";
 
     sf::TcpListener listener;
     listener.listen(80); //création du listener et écoute du port
@@ -35,7 +102,10 @@ int main()
              cout << "wait ?" << endl;
             if (selector.isReady(listener))  // Il y a une connexion en attente
             {
+<<<<<<< HEAD
                  cout << "is ready ?" << endl;
+=======
+>>>>>>> origin/master
                 unique_ptr<sf::TcpSocket> client = make_unique<sf::TcpSocket>();
 
                 if (listener.accept(*client.get()) == sf::Socket::Done)
@@ -47,29 +117,9 @@ int main()
 
                     cout << "NOUVEAU CLIENT !! Nombre de clients: " << clients.size() <<endl;
 
-                    sf::Packet packet;
-                    if (clients[idClient]->receive(packet) != sf::Socket::Done)
-                    {
-                        cout << "echec de reception du pseudo" <<endl;
-                    }
-                    string pseudo;
-                    packet >> code >> pseudo;
-
-                    if(code == 0)
-                    {
-                        packet.clear();
-                        pseudos.push_back(pseudo);
-                        cout << pseudos[idClient]<<endl;
-                    }
-                    code = 0;
-                    data << code;
-                    if(clients[idClient]->send(data) != sf::Socket::Done)
-                    {
-                        cout << "echec d'envoi du code" <<endl;
-                    }
-                    data.clear();
-
+                    std::thread pseudoCheck (pseudocheck, clients, client, pseudos, idClient); //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
                     idClient++;
+
                 }
                 else
                 {
@@ -78,43 +128,33 @@ int main()
             }
             else  // La socket du listener n'est pas prete, on teste tous les autres sockets (clients)
             {
-
-                for (int i=0; i < clients.size(); i++)
+                int limit = clients.size();
+                for (int i=0; i < limit; i++)
                 {
-                    //cout << "boucle for"<<endl;
                     if (selector.isReady(*clients[i].get()))
                     {
                         // Le client a fait quelque chose dans la socket
-                        //cout << "selectoready"<<endl;
 
-                        sf::Packet packet;
-                        if (clients[i]->receive(packet))
+                        sf::Packet data2;
+
+                        if (clients[i]->receive(data2) != sf::Socket::Disconnected)
                         {
-                            cout << "receive" << endl;
-                            packet >> code >> tailleGrille >> client2IP >> nbAlign;
-                            packet.clear();
 
-                            if(code == 11)
-                            {
-                                //delete clients[i].get();
-
-                                clients.erase(clients.begin()+i);
-                                pseudos.erase(pseudos.begin()+i);
-                                cout << "Client " << i << " est parti..." <<endl;
-                                tailleGrille = 0;
-                                client2IP = "";
-                                nbAlign = 0;
-                                //system("pause");
-                            }
+                        }
+                        else
+                        {
+                            cout << pseudos[i] << " est parti" << endl;
+                            selector.remove(*clients[i].get());
+                            clients.erase(clients.begin()+i);
+                            pseudos.erase(pseudos.begin()+i);
+                            i--;
+                            limit--;
+                            idClient--;
                         }
                     }
                 }
             }
         }
     }
-
-
-
-
     return 0;
 }

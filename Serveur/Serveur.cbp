@@ -16,13 +16,9 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-<<<<<<< HEAD
-					<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/lib/SFML/libsfml-network-d.a" />
 					<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/lib/SFML/libsfml-system-d.a" />
-=======
 					<Add library="C:/Program Files (x86)/CodeBlocks/SFML-2.3.1/lib/libsfml-network-d.a" />
 					<Add library="C:/Program Files (x86)/CodeBlocks/SFML-2.3.1/lib/libsfml-system-d.a" />
->>>>>>> d482bd995f3a209b101d306d97607e457c23c058
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -36,18 +32,15 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-<<<<<<< HEAD
-					<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/lib/SFML/libsfml-network.a" />
 					<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/lib/SFML/libsfml-system.a" />
-=======
 					<Add library="C:/Program Files (x86)/CodeBlocks/SFML-2.3.1/lib/libsfml-network-d.a" />
 					<Add library="C:/Program Files (x86)/CodeBlocks/SFML-2.3.1/lib/libsfml-system-d.a" />
->>>>>>> d482bd995f3a209b101d306d97607e457c23c058
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="Player.cpp" />
