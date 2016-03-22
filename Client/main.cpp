@@ -66,7 +66,7 @@ int main()
     if(code==101)
     {
         idCLient = code-100;
-        cout << "Vous etes les createurs de la partie." << endl;
+        /*cout << "Vous etes les createurs de la partie." << endl;
         cout << "Veuillez renseigner les options suivantes : " << endl;
         cout << "Entrez taille de la grille : ";
         getline(cin, sizeGridString);
@@ -80,7 +80,7 @@ int main()
         data << 0 << sizeGrid << ipPlayerString << nbPion;
         if (socket.send(data) != sf::Socket::Done)
             std::cout << "Impossible d'envoyer les donnees au serveur" << std::endl;
-        data.clear();
+        data.clear();*/
     }
     else if(code>101 && code<110)
     {
